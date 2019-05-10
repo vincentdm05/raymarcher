@@ -20,7 +20,7 @@ public:
 	Real &s = scalar;
 	Vec3 &v = vector;
 
-	Quat() { w = 0; x = 1; y = 0; z = 0; }
+	Quat() { w = 1; x = 0; y = 0; z = 0; }
 	Quat(Real _w, Real _x, Real _y, Real _z) { w = _w; x = _x; y = _y; z = _z; }
 	Quat(Real _s, const Vec3 &_v) { s = _s; v = _v; }
 
