@@ -117,24 +117,42 @@ inline Quat &Quat::conjugate()
 
 inline Quat &Quat::normalize()
 {
-	Real invn = 1.0 / norm();
-	s *= invn;
-	v *= invn;
+	Real n = norm();
+	if (n == 0)
+	{
+		*this = Quat();
+	}
+	else
+	{
+		Real invn = 1.0 / n;
+		*this *= invn;
+	}
 	return *this;
 }
 
 inline Quat Quat::reciprocal() const
 {
+	Real sqNorm = squaredNorm();
+	if (sqNorm == 0)
+		return Quat();
+
 	Quat q = getConjugate();
-	q /= squaredNorm();
+	q /= sqNorm;
 	return q;
 }
 
 inline Quat &Quat::reciprocate()
 {
-	Real sqnorm = squaredNorm();
-	conjugate();
-	*this /= sqnorm;
+	Real sqNorm = squaredNorm();
+	if (sqNorm == 0)
+	{
+		*this = Quat();
+	}
+	else
+	{
+		conjugate();
+		*this /= sqNorm;
+	}
 	return *this;
 }
 
@@ -222,13 +240,22 @@ inline Quat conjugate(const Quat &q)
 
 inline Quat normalize(const Quat &q)
 {
-	Real invn = 1.0 / q.norm();
-	return q * invn;
+	Real norm = q.norm();
+	if (norm == 0)
+		return Quat();
+
+	Real invNorm = 1.0 / norm;
+	return q * invNorm;
 }
 
 inline Quat reciprocate(const Quat &q)
 {
-	return q.getConjugate() / q.squaredNorm();
+	Real sqNorm = q.squaredNorm();
+	if (sqNorm == 0)
+		return Quat();
+
+	Real invSqNorm = 1.0 / sqNorm;
+	return q.getConjugate() * invSqNorm;
 }
 
 inline Vec3 rotate(const Vec3 &v, const Quat &q)
