@@ -20,6 +20,7 @@ class Raymarcher
 private:
 	bool outputEnabled = true;
 	bool visualiseIterations = false;
+	bool visualiseDepth = false;
 	uint maxRayIterations = 100;
 	uint samplesPerPixel = 100;
 	Real hitEpsilon = 1e-4;
@@ -34,6 +35,7 @@ public:
 	void printImage(const Scene &scene, const Camera &camera) const;
 	void setOutputEnabled(bool value) { outputEnabled = value; }
 	void setVisualiseIterations(bool value) { visualiseIterations = value; }
+	void setVisualiseDepth(bool value) { visualiseDepth = value; }
 	void setMaxRayIterations(uint n) { maxRayIterations = n; }
 	void setSamplesPerPixel(uint n) { samplesPerPixel = n; }
 	void setHitEpsilon(Real e) { hitEpsilon = e; }
@@ -64,6 +66,8 @@ Vec3 Raymarcher::getColour(const Ray &r, const Scene &scene) const
 
 	if (visualiseIterations)
 		return Vec3(1, 1, 1) * iteration / maxRayIterations;
+	else if (visualiseDepth)
+		return Vec3(1, 1, 1) / (1.0 + dist);
 
 	if (hit)
 	{
