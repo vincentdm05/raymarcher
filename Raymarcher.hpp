@@ -57,7 +57,7 @@ Vec3 Raymarcher::getColour(const Ray &r, const Scene &scene) const
 	uint iteration = 0;
 	for (; iteration < maxRayIterations; iteration++)
 	{
-		Vec3 point = r.origin() + r.direction() * dist;
+		Vec3 point = r.to(dist);
 		rec.t = std::numeric_limits<Real>::max();
 		hit = scene.evaluateSDF(point, hitEpsilon, rec);
 		dist += rec.t;
