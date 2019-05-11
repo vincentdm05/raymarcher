@@ -21,8 +21,8 @@ private:
 	bool outputEnabled = true;
 	bool visualiseIterations = false;
 	bool visualiseDepth = false;
-	uint maxRayIterations = 100;
-	uint samplesPerPixel = 100;
+	uint maxRayIterations = 300;
+	uint samplesPerPixel = 1;
 	Real maxRayLength = 1000.0;
 	Real hitEpsilon = 1e-4;
 
