@@ -9,9 +9,9 @@ class Material;
 class Sphere : public Hitable
 {
 private:
+	Sphere() {}
 
 public:
-	Sphere() {}
 	Sphere(const Vec3 &_center, Real _radius, const Material &_material);
 
 	virtual bool evaluateSDF(const Vec3 &point, Real epsilon, HitRecord &rec) const;
