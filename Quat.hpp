@@ -21,8 +21,14 @@ public:
 	Vec3 &v = vector;
 
 	Quat() { w = 1; x = 0; y = 0; z = 0; }
+	Quat(const Quat &q) { s = q.s; v = q.v; }
+	Quat(Quat && q) { s = std::move(q.s); v = std::move(q.v); }
 	Quat(Real _w, Real _x, Real _y, Real _z) { w = _w; x = _x; y = _y; z = _z; }
 	Quat(Real _s, const Vec3 &_v) { s = _s; v = _v; }
+	~Quat() = default;
+
+	inline Quat &operator=(const Quat &other) { if (this != &other) { s = other.s; v = other.v; }; return *this; }
+	inline Quat &operator=(Quat && q) { s = std::move(q.s); v = std::move(q.v); return *this; }
 
 	inline Quat &operator+() { return *this; }
 	inline Quat operator-() const { return Quat(-s, -v); }
