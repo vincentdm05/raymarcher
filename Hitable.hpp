@@ -20,6 +20,7 @@ class Hitable
 {
 protected:
 	Transform transform;
+	const Material *material = nullptr;
 
 public:
 	virtual ~Hitable() {}

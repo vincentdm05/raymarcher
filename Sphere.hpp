@@ -9,7 +9,6 @@ class Material;
 class Sphere : public Hitable
 {
 private:
-	const Material *material = nullptr;
 
 public:
 	Sphere() {}
