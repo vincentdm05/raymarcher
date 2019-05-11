@@ -112,8 +112,10 @@ inline Vec3 &Vec3::operator/=(Real c)
 
 inline Vec3 &Vec3::normalize()
 {
-	Real invl = 1 / length();
-	*this *= invl;
+	Real l = length();
+	if (l == 0)
+		throw "Zero vector can't be normalized";
+	*this /= l;
 	return *this;
 }
 
@@ -201,8 +203,10 @@ inline Vec3 cross(const Vec3 &a, const Vec3 &b)
 
 inline Vec3 normalize(const Vec3 &v)
 {
-	Real invl = 1 / v.length();
-	return v * invl;
+	Real l = v.length();
+	if (l == 0)
+		throw "Zero vector can't be normalized";
+	return v / l;
 }
 
 inline Vec3 sqrt(const Vec3 &v)
