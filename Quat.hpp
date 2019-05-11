@@ -258,6 +258,19 @@ inline Quat reciprocate(const Quat &q)
 	return q.getConjugate() * invSqNorm;
 }
 
+inline Quat axisAngleToQuat(const Vec3 &axis, Real angle)
+{
+	if (angle == 0)
+		return Quat();
+
+	Real axisLength = axis.length();
+	if (axisLength == 0)
+		return Quat();
+
+	Real halfAngle = angle * 0.5;
+	return Quat(cos(halfAngle), (axis / axisLength) * sin(halfAngle));
+}
+
 inline Vec3 rotate(const Vec3 &v, const Quat &q)
 {
 	Vec3 res = dot(v, q.v) * q.v;
