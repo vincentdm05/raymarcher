@@ -23,6 +23,7 @@ private:
 	bool visualiseDepth = false;
 	uint maxRayIterations = 100;
 	uint samplesPerPixel = 100;
+	Real maxRayLength = 1000.0;
 	Real hitEpsilon = 1e-4;
 
 	Vec3 gammaCorrect(const Vec3 &colour) const;
@@ -38,6 +39,7 @@ public:
 	void setVisualiseDepth(bool value) { visualiseDepth = value; }
 	void setMaxRayIterations(uint n) { maxRayIterations = n; }
 	void setSamplesPerPixel(uint n) { samplesPerPixel = n; }
+	void setMaxRayLength(Real l) { maxRayLength = l; }
 	void setHitEpsilon(Real e) { hitEpsilon = e; }
 };
 
@@ -60,7 +62,7 @@ Vec3 Raymarcher::getColour(const Ray &r, const Scene &scene) const
 		hit = scene.evaluateSDF(point, hitEpsilon, rec);
 		dist += rec.t;
 
-		if (hit || dist < rec.t)
+		if (hit || dist < rec.t || dist > maxRayLength)
 			break;
 	}
 
