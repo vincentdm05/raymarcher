@@ -34,8 +34,8 @@ public:
 
 	inline const Vec3 &operator+() const { return *this; }
 	inline Vec3 operator-() const { return Vec3(-x, -y, -z); }
-	inline Real operator[](uint i) const { return e[i % 3]; }
-	inline Real &operator[](uint i) { return e[i % 3]; }
+	inline Real operator[](uint i) const { if (i > 2) throw "Index out of bounds."; return e[i]; }
+	inline Real &operator[](uint i) { if (i > 2) throw "Index out of bounds."; return e[i]; }
 
 	inline Vec3 &operator+=(const Vec3 &v);
 	inline Vec3 &operator-=(const Vec3 &v);

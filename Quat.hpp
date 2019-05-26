@@ -37,8 +37,8 @@ public:
 
 	inline Quat &operator+() { return *this; }
 	inline Quat operator-() const { return Quat(-s, -v); }
-	inline Real operator[](uint i) const { if (i == 0) return s; return v[i - 1]; }
-	inline Real &operator[](uint i) { if (i == 0) return s; return v[i - 1]; }
+	inline Real operator[](uint i) const { if (i > 3) throw "Index out of bounds."; if (i == 0) return s; return v[i - 1]; }
+	inline Real &operator[](uint i) { if (i > 3) throw "Index out of bounds."; if (i == 0) return s; return v[i - 1]; }
 
 	inline Quat &operator+=(const Quat &q);
 	inline Quat &operator-=(const Quat &q);
