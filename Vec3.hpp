@@ -48,6 +48,7 @@ public:
 
 	inline Real squaredLength() const { return x * x + y * y + z * z; }
 	inline Real length() const { return sqrt(squaredLength()); }
+	inline Vec3 normalized() const;
 	inline Vec3 &normalize();
 };
 
@@ -113,6 +114,12 @@ inline Vec3 &Vec3::operator/=(Real c)
 	y /= c;
 	z /= c;
 	return *this;
+}
+
+inline Vec3 Vec3::normalized() const
+{
+	Vec3 v = *this;
+	return v.normalize();
 }
 
 inline Vec3 &Vec3::normalize()

@@ -53,9 +53,12 @@ public:
 	inline Quat &conjugate();
 	inline Real squaredNorm() const { return s * s + v.squaredLength(); }
 	inline Real norm() const { return sqrt(squaredNorm()); }
+	inline Quat normalized() const;
 	inline Quat &normalize();
 	inline Quat reciprocal() const;
 	inline Quat &reciprocate();
+
+	inline void getAxisAngle(Vec3 &axisOut, Real &angleOut) const;
 };
 
 inline Quat &Quat::operator+=(const Quat &q)
@@ -125,6 +128,12 @@ inline Quat &Quat::conjugate()
 	return *this;
 }
 
+inline Quat Quat::normalized() const
+{
+	Quat q = *this;
+	return q.normalize();
+}
+
 inline Quat &Quat::normalize()
 {
 	Real n = norm();
@@ -164,6 +173,19 @@ inline Quat &Quat::reciprocate()
 		*this /= sqNorm;
 	}
 	return *this;
+}
+
+inline void Quat::getAxisAngle(Vec3 &axisOut, Real &angleOut) const
+{
+	angleOut = 2.0 * acos(s);
+	if (angleOut == 0)
+	{
+		axisOut = Vec3();
+	}
+	else
+	{
+		axisOut = v / sqrt(1.0 - s * s);
+	}
 }
 
 inline std::istream &operator>>(std::istream &is, Quat &q)
