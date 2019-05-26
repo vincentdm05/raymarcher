@@ -72,17 +72,22 @@ inline Quat &Quat::operator-=(const Quat &q)
 	return *this;
 }
 
+// Note that this is equivalent to:
+// *this = *this * q;
+// Remember that chaining rotations is done in reverse order
 inline Quat &Quat::operator*=(const Quat &q)
 {
-	s *= q.s;
-	v *= q.v;
+	Real newS = s * q.s - dot(v, q.v);
+	Vec3 newV = s * q.v + q.s * v + cross(v, q.v);
+	s = newS;
+	v = newV;
 	return *this;
 }
 
 inline Quat &Quat::operator/=(const Quat &q)
 {
-	s /= q.s;
-	v /= q.v;
+	Quat rcp = q.reciprocal();
+	*this *= rcp;
 	return *this;
 }
 
