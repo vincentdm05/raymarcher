@@ -1,5 +1,6 @@
 #include "Common.hpp"
 
+#include "Box.hpp"
 #include "Camera.hpp"
 #include "Debug.hpp"
 #include "Lambertian.hpp"
@@ -122,18 +123,30 @@ void testQuat()
 
 void testScene(const Raymarcher &raymarcher)
 {
-	Vec3 cameraPosition(0.0, 0.0, 1.0);
+	Vec3 cameraPosition(0.0, 0.0, 2.0);
 	Vec3 focusPosition(0, 0, -3);
 	Vec3 focusDirection = focusPosition - cameraPosition;
 	Camera camera(cameraPosition, focusDirection, Vec3(0.0, 1.0, 0.0), 20, Viewport(200, 100));
 
-	Lambertian material(Vec3(0.1, 0.2, 0.5));
+	Lambertian material0(Vec3(0.6, 0.6, 0.6));
+	Lambertian material1(Vec3(0.7, 0.2, 0.1));
+	Lambertian material2(Vec3(0.15, 0.7, 0.15));
+	Lambertian material3(Vec3(0.1, 0.2, 0.7));
 
-	Sphere sphere(focusPosition, 0.5, material);
+	Sphere sphere0(Vec3(0.0, -100.5, -3.0), 100, material0);
+	Sphere sphere1(focusPosition + Vec3(-1.0, 0.0, 0.0), 0.5, material1);
+	Sphere sphere2(focusPosition + Vec3(-0.8, 0.0, -2.0), 0.5, material2);
+	Sphere sphere3(focusPosition + Vec3(-0.6, 0.0, -4.0), 0.5, material3);
+	Transform t(axisAngleToQuat(Vec3(-0.25, 0.0, 1.0), M_PI * 0.25), Vec3(1.0, 0.0, -3.0), 1.0);
+	Box box(t, Vec3(0.4, 0.5, 0.6), material3);
 
 	Scene scene;
 	scene.setBackground(Background(Vec3(0.8, 0.3, 0.1), Vec3(0.2, 0.7, 0.9)));
-	scene.add(sphere);
+	scene.add(sphere0);
+	scene.add(sphere1);
+	scene.add(sphere2);
+	scene.add(sphere3);
+	scene.add(box);
 
 	raymarcher.printImage(scene, camera);
 }
