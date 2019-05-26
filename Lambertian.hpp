@@ -5,6 +5,7 @@
 #include "Background.hpp"
 #include "Material.hpp"
 #include "Math.hpp"
+#include "Sampling.hpp"
 #include "Scene.hpp"
 
 class Lambertian : public Material
