@@ -2,8 +2,10 @@
 
 #include "Common.hpp"
 
+#include "Math.hpp"
 #include "Vec3.hpp"
 
+#include <iostream>
 #include <math.h>
 
 class Quat
@@ -226,6 +228,37 @@ inline Quat operator*(Real c, const Quat &q)
 inline Quat operator/(Real c, const Quat &q)
 {
 	return q.reciprocal() * c;
+}
+
+inline Real min(const Quat &q)
+{
+	return min(q.s, min(q.v));
+}
+
+inline Quat min(const Quat &a, const Quat &b)
+{
+	return Quat(min(a.s, b.s), min(a.v, b.v));
+}
+
+inline Real max(const Quat &q)
+{
+	return max(q.s, max(q.v));
+}
+
+inline Quat max(const Quat &a, const Quat &b)
+{
+	return Quat(max(a.s, b.s), max(a.v, b.v));
+}
+
+inline Quat abs(const Quat &q)
+{
+	return Quat(abs(q.s), abs(q.v));
+}
+
+inline Quat lerp(const Quat &a, const Quat &b, Real t)
+{
+	t = clamp(t, 0, 1);
+	return (1 - t) * a + t * b;
 }
 
 inline Real dot(const Quat &a, const Quat &b)
