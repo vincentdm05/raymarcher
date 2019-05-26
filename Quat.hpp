@@ -32,6 +32,9 @@ public:
 	inline Quat &operator=(const Quat &other) { if (this != &other) { s = other.s; v = other.v; }; return *this; }
 	inline Quat &operator=(Quat && q) { s = std::move(q.s); v = std::move(q.v); return *this; }
 
+	inline bool operator==(const Quat &q) { return s == q.s && v == q.v; }
+	inline bool operator!=(const Quat &q) { return s != q.s || v != q.v; }
+
 	inline Quat &operator+() { return *this; }
 	inline Quat operator-() const { return Quat(-s, -v); }
 	inline Real operator[](uint i) const { if (i == 0) return s; return v[i - 1]; }
@@ -253,6 +256,11 @@ inline Quat max(const Quat &a, const Quat &b)
 inline Quat abs(const Quat &q)
 {
 	return Quat(abs(q.s), abs(q.v));
+}
+
+inline bool closeEnough(const Quat &a, const Quat &b, Real epsilon)
+{
+	return max(abs(a - b)) < epsilon;
 }
 
 inline Quat lerp(const Quat &a, const Quat &b, Real t)

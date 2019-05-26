@@ -29,6 +29,9 @@ public:
 	inline Vec3 &operator=(const Vec3 &v) { if (this != &v) { x = v.x; y = v.y; z = v.z; }; return *this; }
 	inline Vec3 &operator=(Vec3 &&other) { x = std::move(other.x); y = std::move(other.y); z = std::move(other.z); return *this; }
 
+	inline bool operator==(const Vec3 &v) const { return x == v.x && y == v.y && z == v.z; }
+	inline bool operator!=(const Vec3 &v) const { return x != v.x || y != v.y || z != v.z; }
+
 	inline const Vec3 &operator+() const { return *this; }
 	inline Vec3 operator-() const { return Vec3(-x, -y, -z); }
 	inline Real operator[](uint i) const { return e[i % 3]; }
@@ -216,6 +219,11 @@ inline Vec3 max(const Vec3 &a, const Vec3 &b)
 inline Vec3 abs(const Vec3 &v)
 {
 	return Vec3(abs(v.x), abs(v.y), abs(v.z));
+}
+
+inline bool closeEnough(const Vec3 &a, const Vec3 &b, Real epsilon)
+{
+	return max(abs(a - b)) < epsilon;
 }
 
 inline Vec3 lerp(const Vec3 &a, const Vec3 &b, Real t)
