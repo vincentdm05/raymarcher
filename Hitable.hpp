@@ -29,6 +29,7 @@ public:
 
 	virtual bool hit(const Vec3 &point, Real epsilon, HitRecord &recOut) const;
 	virtual Real evaluateSDF(const Vec3 &point) const = 0;
+	virtual Vec3 evaluateNormal(const Vec3 &point, Real epsilon) const;
 };
 
 bool Hitable::hit(const Vec3 &point, Real epsilon, HitRecord &rec) const
@@ -44,4 +45,13 @@ bool Hitable::hit(const Vec3 &point, Real epsilon, HitRecord &rec) const
 	}
 
 	return false;
+}
+
+Vec3 Hitable::evaluateNormal(const Vec3 &point, Real epsilon) const
+{
+	Vec3 normal;
+	normal.x = evaluateSDF(point + Vec3(epsilon, 0, 0)) - evaluateSDF(point - Vec3(epsilon, 0, 0));
+	normal.y = evaluateSDF(point + Vec3(0, epsilon, 0)) - evaluateSDF(point - Vec3(0, epsilon, 0));
+	normal.z = evaluateSDF(point + Vec3(0, 0, epsilon)) - evaluateSDF(point - Vec3(0, 0, epsilon));
+	return normalize(normal);
 }

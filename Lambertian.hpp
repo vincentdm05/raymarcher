@@ -22,11 +22,13 @@ public:
 
 Vec3 Lambertian::shade(const HitRecord &hr, const Scene &scene) const
 {
+	Real epsilon = 0.0001;
+	Vec3 normal = hr.hitable->evaluateNormal(hr.point, epsilon);
 	Vec3 irradiance;
 	uint nSamples = 50;
 	for (uint i = 0; i < nSamples; i++)
 	{
-		Vec3 sampleDirection = hr.normal + sampleUnitSphere();
+		Vec3 sampleDirection = normal + sampleUnitSphere();
 		irradiance += scene.background().sample(sampleDirection);
 	}
 	irradiance /= nSamples;

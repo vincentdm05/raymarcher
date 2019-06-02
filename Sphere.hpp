@@ -15,6 +15,7 @@ public:
 	Sphere(const Vec3 &_center, Real _radius, const Material &_material);
 
 	virtual Real evaluateSDF(const Vec3 &point) const override;
+	Vec3 evaluateNormal(const Vec3 &point, Real epsilon) const override;
 };
 
 Sphere::Sphere(const Vec3 &_center, Real _radius, const Material &_material)
@@ -28,4 +29,9 @@ Sphere::Sphere(const Vec3 &_center, Real _radius, const Material &_material)
 Real Sphere::evaluateSDF(const Vec3 &point) const
 {
 	return (point - transform.translation()).length() - transform.scale();
+}
+
+Vec3 Sphere::evaluateNormal(const Vec3 &point, Real epsilon) const
+{
+	return (point - transform.translation()) / transform.scale();
 }
