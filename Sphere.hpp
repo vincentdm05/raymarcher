@@ -14,7 +14,7 @@ private:
 public:
 	Sphere(const Vec3 &_center, Real _radius, const Material &_material);
 
-	virtual bool evaluateSDF(const Vec3 &point, Real epsilon, HitRecord &rec) const;
+	virtual Real evaluateSDF(const Vec3 &point) const override;
 };
 
 Sphere::Sphere(const Vec3 &_center, Real _radius, const Material &_material)
@@ -25,18 +25,7 @@ Sphere::Sphere(const Vec3 &_center, Real _radius, const Material &_material)
 	material = &_material;
 }
 
-bool Sphere::evaluateSDF(const Vec3 &point, Real epsilon, HitRecord &rec) const
+Real Sphere::evaluateSDF(const Vec3 &point) const
 {
-	rec.t = (point - transform.translation()).length() - transform.scale();
-
-	if (rec.t - epsilon <= 0.0)
-	{
-		rec.point = point;
-		rec.normal = (rec.point - transform.translation()) / transform.scale();
-		rec.material = material;
-
-		return true;
-	}
-
-	return false;
+	return (point - transform.translation()).length() - transform.scale();
 }

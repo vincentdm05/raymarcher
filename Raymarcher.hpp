@@ -58,7 +58,7 @@ Vec3 Raymarcher::getColour(const Ray &r, const Scene &scene) const
 	{
 		Vec3 point = r.to(dist);
 		rec.t = max();
-		hit = scene.evaluateSDF(point, hitEpsilon, rec);
+		hit = scene.hit(point, hitEpsilon, rec);
 		dist += rec.t;
 
 		if (hit || dist < rec.t || dist > maxRayLength)
@@ -72,10 +72,14 @@ Vec3 Raymarcher::getColour(const Ray &r, const Scene &scene) const
 
 	if (hit)
 	{
-		if (rec.material)
-			return rec.material->shade(rec, scene);
+		if (rec.hitable)
+		{
+			return rec.hitable->getMaterial()->shade(rec, scene);
+		}
 		else
+		{
 			return Vec3(0, 0, 0);
+		}
 	}
 
 	return scene.background().sample(r.direction());

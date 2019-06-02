@@ -4,6 +4,7 @@
 
 #include "Background.hpp"
 #include "Hitable.hpp"
+#include "Math.hpp"
 
 #include <vector>
 
@@ -18,19 +19,20 @@ public:
 	Scene(uint size) { hitables.reserve(size); }
 	~Scene() { hitables.clear(); }
 
-	virtual bool evaluateSDF(const Vec3 &point, Real epsilon, HitRecord &rec) const;
+	virtual bool hit(const Vec3 &point, Real epsilon, HitRecord &rec) const override;
+	virtual Real evaluateSDF(const Vec3 &point) const override;
 
 	void setBackground(const Background &_background) { bg = _background; }
 	const Background &background() const { return bg; }
 	void add(const Hitable &hitable) { hitables.push_back(&hitable); }
 };
 
-bool Scene::evaluateSDF(const Vec3 &point, Real epsilon, HitRecord &rec) const
+bool Scene::hit(const Vec3 &point, Real epsilon, HitRecord &rec) const
 {
 	for (const Hitable *hitable : hitables)
 	{
 		HitRecord tmpRec;
-		if (hitable->evaluateSDF(point, epsilon, tmpRec))
+		if (hitable->hit(point, epsilon, tmpRec))
 		{
 			rec = tmpRec;
 			return true;
@@ -41,4 +43,12 @@ bool Scene::evaluateSDF(const Vec3 &point, Real epsilon, HitRecord &rec) const
 		}
 	}
 	return false;
+}
+
+Real Scene::evaluateSDF(const Vec3 &point) const
+{
+	Real minDist = max();
+	for (const Hitable *hitable : hitables)
+		minDist = min(minDist, hitable->evaluateSDF(point));
+	return minDist;
 }
