@@ -3,6 +3,17 @@
 #include "Common.hpp"
 
 #include <math.h>
+#include <limits>
+
+inline Real min()
+{
+	return std::numeric_limits<Real>::min();
+}
+
+inline Real max()
+{
+	return std::numeric_limits<Real>::max();
+}
 
 inline Real min(Real a, Real b)
 {

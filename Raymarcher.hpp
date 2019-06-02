@@ -12,7 +12,6 @@
 #include "Viewport.hpp"
 
 #include <iostream>
-#include <limits>
 #include <random>
 
 class Raymarcher
@@ -58,7 +57,7 @@ Vec3 Raymarcher::getColour(const Ray &r, const Scene &scene) const
 	for (; iteration < maxRayIterations; iteration++)
 	{
 		Vec3 point = r.to(dist);
-		rec.t = std::numeric_limits<Real>::max();
+		rec.t = max();
 		hit = scene.evaluateSDF(point, hitEpsilon, rec);
 		dist += rec.t;
 
