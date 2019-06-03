@@ -18,3 +18,17 @@ void toCerr(Args&&... args)
 		toCerr("Assertion failed: (", #cond, "), (", __VA_ARGS__, "), function ", __func__, ", file ", __FILE__, ", line ", __LINE__, "."); \
 		abort(); \
 	}
+
+#define raymAssertEqual(left, right) \
+	if (!(left == right)) \
+	{ \
+		toCerr("Assertion failed: ", #left, " does not equal ", #right, " (", left, " != ", right, "), function ", __func__, ", file ", __FILE__, ", line ", __LINE__, "."); \
+		abort(); \
+	}
+
+#define raymAssertEqualWithTolerance(left, right, epsilon) \
+	if (!closeEnough(left, right, epsilon)) \
+	{ \
+		toCerr("Assertion failed: ", #left, " does not equal ", #right, " (", left, " != ", right, "), function ", __func__, ", file ", __FILE__, ", line ", __LINE__, "."); \
+		abort(); \
+	}
