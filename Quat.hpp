@@ -196,7 +196,7 @@ inline std::istream &operator>>(std::istream &is, Quat &q)
 
 inline std::ostream &operator<<(std::ostream &os, const Quat &q)
 {
-	os << q.s << " " << q.v;
+	os << "Quat(" << q.s << ", " << q.v << ")";
 	return os;
 }
 

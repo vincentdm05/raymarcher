@@ -139,7 +139,7 @@ inline std::istream &operator>>(std::istream &is, Vec3 &v)
 
 inline std::ostream &operator<<(std::ostream &os, const Vec3 &v)
 {
-	os << v.x << " " << v.y << " " << v.z;
+	os << "Vec3(" << v.x << ", " << v.y << ", " << v.z << ")";
 	return os;
 }
 
