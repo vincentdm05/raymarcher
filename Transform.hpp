@@ -16,6 +16,9 @@ public:
 	Transform() {}
 	Transform(const Quat &_rotation, const Vec3 &_translation, Real _scale) { r = _rotation; t = _translation; s = _scale; }
 
+	inline bool operator==(const Transform &_t) const { return r == _t.r && t == _t.t && s == _t.s; }
+	inline bool operator!=(const Transform &_t) const { return r != _t.r || t != _t.t || s != _t.s; }
+
 	const Quat &rotation() const { return r; }
 	const Vec3 &translation() const { return t; }
 	Real scale() const { return s; }
@@ -49,4 +52,31 @@ Vec3 Transform::applyInverse(const Vec3 &v) const
 	u = rotate(u, r.getConjugate());
 	u /= s;
 	return u;
+}
+
+inline std::istream &operator>>(std::istream &is, Transform &t)
+{
+	Quat r;
+	is >> r.s >> r.v;
+	Vec3 tr;
+	is >> tr;
+	Real s;
+	is >> s;
+	t.setRotation(r);
+	t.setTranslation(tr);
+	t.setScale(s);
+	return is;
+}
+
+inline std::ostream &operator<<(std::ostream &os, const Transform &t)
+{
+	os << "Transform(" << t.rotation() << ", " << t.translation() << ", " << t.scale() << ")";
+	return os;
+}
+
+inline bool closeEnough(const Transform &a, const Transform &b, Real epsilon)
+{
+	return closeEnough(a.scale(), b.scale(), epsilon) &&
+		closeEnough(a.rotation(), b.rotation(), epsilon) &&
+		closeEnough(a.translation(), b.translation(), epsilon);
 }
