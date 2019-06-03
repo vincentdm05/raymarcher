@@ -13,7 +13,7 @@ private:
 	Real s = 1;
 
 public:
-	Transform() : r(), t(), s() {}
+	Transform() {}
 	Transform(const Quat &_rotation, const Vec3 &_translation, Real _scale) { r = _rotation; t = _translation; s = _scale; }
 
 	const Quat &rotation() const { return r; }
