@@ -32,8 +32,8 @@ public:
 	inline Quat &operator=(const Quat &other) { if (this != &other) { s = other.s; v = other.v; }; return *this; }
 	inline Quat &operator=(Quat && q) { s = std::move(q.s); v = std::move(q.v); return *this; }
 
-	inline bool operator==(const Quat &q) { return s == q.s && v == q.v; }
-	inline bool operator!=(const Quat &q) { return s != q.s || v != q.v; }
+	inline bool operator==(const Quat &q) const { return s == q.s && v == q.v; }
+	inline bool operator!=(const Quat &q) const { return s != q.s || v != q.v; }
 
 	inline Quat &operator+() { return *this; }
 	inline Quat operator-() const { return Quat(-s, -v); }
