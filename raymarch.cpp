@@ -157,7 +157,8 @@ void testScene(const Raymarcher &raymarcher)
 	Vec3 cameraPosition(0.0, 0.0, 2.0);
 	Vec3 focusPosition(0, 0, -3);
 	Vec3 focusDirection = focusPosition - cameraPosition;
-	Camera camera(cameraPosition, focusDirection, Vec3(0.0, 1.0, 0.0), 20, Viewport(200, 100));
+	Viewport viewport(512, 256);
+	Camera camera(cameraPosition, focusDirection, Vec3(0.0, 1.0, 0.0), 20, viewport);
 
 	Lambertian material0(Vec3(0.6, 0.6, 0.6));
 	Lambertian material1(Vec3(0.7, 0.2, 0.1));
@@ -168,8 +169,8 @@ void testScene(const Raymarcher &raymarcher)
 	Sphere sphere1(focusPosition + Vec3(-1.0, 0.0, 0.0), 0.5, material1);
 	Sphere sphere2(focusPosition + Vec3(-0.8, 0.0, -2.0), 0.5, material2);
 	Sphere sphere3(focusPosition + Vec3(-0.6, 0.0, -4.0), 0.5, material3);
-	Transform t(axisAngleToQuat(Vec3(-0.25, 0.0, 1.0), M_PI * 0.25), Vec3(1.0, 0.0, -3.0), 1.0);
-	Box box(t, Vec3(0.4, 0.5, 0.6), material3);
+	Transform t(axisAngleToQuat(Vec3(0.0, 0.2, 1.0), M_PI * 0.25), Vec3(1.0, 0.0, -3.0), 1.0);
+	Box box(t, Vec3(0.5, 0.5, 0.5), material3);
 
 	Scene scene;
 	scene.setBackground(Background(Vec3(0.8, 0.3, 0.1), Vec3(0.2, 0.7, 0.9)));
@@ -188,9 +189,11 @@ int main()
 	// testTransform();
 
 	Raymarcher raymarcher;
-	raymarcher.setMaxRayIterations(30);
-	raymarcher.setHitEpsilon(0.0001);
-	raymarcher.setSamplesPerPixel(10);
+	// raymarcher.setVisualiseIterations(true);
+	// raymarcher.setVisualiseDepth(true);
+	raymarcher.setMaxRayIterations(200);
+	raymarcher.setHitEpsilon(0.001);
+	raymarcher.setSamplesPerPixel(1);
 
 	testScene(raymarcher);
 
