@@ -7,6 +7,7 @@
 #include "Material.hpp"
 #include "Math.hpp"
 #include "Ray.hpp"
+#include "Sampling.hpp"
 #include "Scene.hpp"
 #include "Vec3.hpp"
 #include "Viewport.hpp"
@@ -94,8 +95,8 @@ Vec3 Raymarcher::samplePixel(const Camera &camera, const Scene &scene, int col, 
 		Real vOffset = 0.5;
 		if (nSamples > 1)
 		{
-			uOffset = drand48();
-			vOffset = drand48();
+			uOffset = uniformRand();
+			vOffset = uniformRand();
 		}
 		Real u = Real(col + uOffset) / vp.width();
 		Real v = Real(row + vOffset) / vp.height();
