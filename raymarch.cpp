@@ -59,13 +59,13 @@ void testQuat()
 	e0 -= Quat(0, Vec3(1, 0, 0));
 	assert(e0 == Quat(2, Vec3(-1, 0, 0)));
 	// Quaternion representing a pi/2 rotation around the x axis
-	Quat e1 = axisAngleToQuat(Vec3(1, 0, 0), M_PI * 0.5);
+	Quat e1 = axisAngleToQuat(Vec3(1, 0, 0), pi() * 0.5);
 	e1 *= e1;
 	Real angle;
 	Vec3 axis;
 	e1.getAxisAngle(axis, angle);
 	raymAssert(axis.normalize() == Vec3(1, 0, 0), axis, " != ", Vec3(1, 0, 0));
-	raymAssert(closeEnough(angle, M_PI, 0.0001), angle, " != ", M_PI);
+	raymAssert(closeEnough(angle, pi(), 0.0001), angle, " != ", pi());
 	e1 /= e1;
 	raymAssert(e1 == Quat(), e1, " != ", Quat());
 	Quat e2(1, Vec3(-1, 0, 1));
@@ -94,9 +94,9 @@ void testQuat()
 	// Arithmetic ops
 	assert(Quat(0, Vec3(1, 2, 3)) + Quat(1, Vec3(-1, 0, -2)) == Quat(1, Vec3(0, 2, 1)));
 	assert(Quat(0, Vec3(1, 2, 3)) - Quat(1, Vec3(-1, 0, -2)) == Quat(-1, Vec3(2, 2, 5)));
-	Quat g0 = axisAngleToQuat(Vec3(1, 0, 0), M_PI * 0.5);
-	Quat g1 = axisAngleToQuat(Vec3(1, 0, 0), M_PI);
-	Quat g2 = axisAngleToQuat(Vec3(1, 0, 0), M_PI * 1.5);
+	Quat g0 = axisAngleToQuat(Vec3(1, 0, 0), pi() * 0.5);
+	Quat g1 = axisAngleToQuat(Vec3(1, 0, 0), pi());
+	Quat g2 = axisAngleToQuat(Vec3(1, 0, 0), pi() * 1.5);
 	raymAssert(closeEnough(g1 * g0, g2, 0.0001), g1 * g0, " != ", g2);
 	raymAssert(closeEnough(g1 / g0, g0, 0.0001), g1 / g0, " != ", g0);
 	assert(Quat(0, Vec3(1, 2, 3)) + 2 == Quat(2, Vec3(3, 4, 5)));
@@ -106,7 +106,7 @@ void testQuat()
 	assert(2 + Quat(0, Vec3(1, -2, -1)) == Quat(2, Vec3(3, 0, 1)));
 	assert(2 - Quat(0, Vec3(-1, 2, 3)) == Quat(2, Vec3(3, 0, -1)));
 	assert(2 * Quat(0, Vec3(-1, 2, 3)) == Quat(0, Vec3(-2, 4, 6)));
-	assert(closeEnough(1 / g0, axisAngleToQuat(Vec3(1, 0, 0), -M_PI * 0.5), 0.0001));
+	assert(closeEnough(1 / g0, axisAngleToQuat(Vec3(1, 0, 0), -pi() * 0.5), 0.0001));
 
 	// Free function mathematical properties
 	assert(dot(Quat(1, Vec3(-1, 2, -2)), Quat(-2, Vec3(-1, 2, 1))) == 1);
@@ -114,8 +114,8 @@ void testQuat()
 	Quat h0(-1, Vec3(2, -3, 4));
 	assert(normalize(h0) == h0.normalized());
 	raymAssert(closeEnough(reciprocate(h0), h0.reciprocal(), 0.0001), reciprocate(h0), " != ", h0.reciprocal());
-	assert(closeEnough(axisAngleToQuat(Vec3(1, 0, 0), M_PI * 0.5), Quat(0.7071067811882787, Vec3(0.7071067811848163, 0.0, 0.0)), 0.0001));
-	Vec3 rotated = rotate(Vec3(1, 1, 0), axisAngleToQuat(Vec3(0, 0, 1), M_PI * 0.5));
+	assert(closeEnough(axisAngleToQuat(Vec3(1, 0, 0), pi() * 0.5), Quat(0.7071067811882787, Vec3(0.7071067811848163, 0.0, 0.0)), 0.0001));
+	Vec3 rotated = rotate(Vec3(1, 1, 0), axisAngleToQuat(Vec3(0, 0, 1), pi() * 0.5));
 	raymAssert(closeEnough(rotated, Vec3(-1, 1, 0), 0.0001), rotated);
 
 	std::cout << "All tests passed!" << std::endl;
@@ -141,8 +141,8 @@ void testTransform()
 	raymAssertEqual(a2.scale(), 2.5);
 
 	// Transformation ops
-	Transform b0(axisAngleToQuat(Vec3(0, -1, 0), M_PI * 0.5), Vec3(-1, 0, 0), 0.5);
-	Transform b1(axisAngleToQuat(Vec3(0, 1, 0), M_PI * 0.5), Vec3(0, 0, -2), 2.0);
+	Transform b0(axisAngleToQuat(Vec3(0, -1, 0), pi() * 0.5), Vec3(-1, 0, 0), 0.5);
+	Transform b1(axisAngleToQuat(Vec3(0, 1, 0), pi() * 0.5), Vec3(0, 0, -2), 2.0);
 	raymAssertEqualWithTolerance(b0.inverse(), b1, 0.0001);
 	raymAssertEqualWithTolerance(b0.apply(Vec3(1, 0, 0)), Vec3(-1, 0, 0.5), 0.0001);
 	raymAssertEqualWithTolerance(b1.apply(Vec3(1, 0, 0)), Vec3(0, 0, -4), 0.0001);
@@ -169,7 +169,7 @@ void testScene(const Raymarcher &raymarcher)
 	Sphere sphere1(focusPosition + Vec3(-1.0, 0.0, 0.0), 0.5, material1);
 	Sphere sphere2(focusPosition + Vec3(-0.8, 0.0, -2.0), 0.5, material2);
 	Sphere sphere3(focusPosition + Vec3(-0.6, 0.0, -4.0), 0.5, material3);
-	Transform t(axisAngleToQuat(Vec3(0.0, 0.2, 1.0), M_PI * 0.25), Vec3(1.0, 0.0, -3.0), 1.0);
+	Transform t(axisAngleToQuat(Vec3(0.0, 0.2, 1.0), pi() * 0.25), Vec3(1.0, 0.0, -3.0), 1.0);
 	Box box(t, Vec3(0.5, 0.5, 0.5), material3);
 
 	Scene scene;

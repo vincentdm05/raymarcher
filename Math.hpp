@@ -5,6 +5,12 @@
 #include <math.h>
 #include <limits>
 
+inline Real pi()
+{
+  const double piDouble = 3.14159265358979323846;
+  return Real(piDouble);
+}
+
 inline Real min()
 {
 	return std::numeric_limits<Real>::min();
