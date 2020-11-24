@@ -31,6 +31,6 @@ Box::Box(const Transform &_transform, const Vec3 &_dimensions, const Material &_
 Real Box::evaluateSDF(const Vec3 &point) const
 {
 	Vec3 p = transform.apply(point);
-	Vec3 diff = abs(p) - dim;
+	Vec3 diff = (abs(p) - dim) * transform.inverseScale();
 	return max(diff, Vec3(0, 0, 0)).length() + min(max(diff), 0);
 }

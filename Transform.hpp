@@ -11,10 +11,11 @@ private:
 	Quat r;
 	Vec3 t;
 	Real s = 1;
+	Real invS = 1;
 
 public:
 	Transform() {}
-	Transform(const Quat &_rotation, const Vec3 &_translation, Real _scale) { r = _rotation; t = _translation; s = _scale; }
+	Transform(const Quat &_rotation, const Vec3 &_translation, Real _scale);
 
 	inline bool operator==(const Transform &_t) const { return r == _t.r && t == _t.t && s == _t.s; }
 	inline bool operator!=(const Transform &_t) const { return r != _t.r || t != _t.t || s != _t.s; }
@@ -22,20 +23,35 @@ public:
 	const Quat &rotation() const { return r; }
 	const Vec3 &translation() const { return t; }
 	Real scale() const { return s; }
+	Real inverseScale() const { return invS; }
 	void setRotation(const Quat &_r) { r = _r; }
 	void setTranslation(const Vec3 &_t) { t = _t; }
-	void setScale(Real _s) { s = _s; }
+	void setScale(Real _s);
 
 	Transform inverse() const;
 	Vec3 apply(const Vec3 &v) const;
 	Vec3 applyInverse(const Vec3 &v) const;
 };
 
+Transform::Transform(const Quat &_rotation, const Vec3 &_translation, Real _scale)
+: r(_rotation)
+, t(_translation)
+{
+	setScale(_scale);
+}
+
+void Transform::setScale(Real _s)
+{
+	if (_s <= 0.0)
+		_s = 1.0;
+	s = _s;
+	invS = 1.0 / _s;
+}
+
 Transform Transform::inverse() const
 {
 	Quat inverseRotation = r.getConjugate();
-	Real inverseScale = 1.0 / s;
-	return Transform(inverseRotation, -rotate(t, inverseRotation) * inverseScale, inverseScale);
+	return Transform(inverseRotation, -rotate(t, inverseRotation) * invS, invS);
 }
 
 Vec3 Transform::apply(const Vec3 &v) const
@@ -50,7 +66,7 @@ Vec3 Transform::applyInverse(const Vec3 &v) const
 {
 	Vec3 u = v - t;
 	u = rotate(u, r.getConjugate());
-	u /= s;
+	u *= invS;
 	return u;
 }
 

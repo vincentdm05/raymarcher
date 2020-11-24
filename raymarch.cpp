@@ -154,8 +154,8 @@ void testTransform()
 
 void testScene(const Raymarcher &raymarcher)
 {
-	Vec3 cameraPosition(0.0, 0.0, 2.0);
-	Vec3 focusPosition(0, 0, -3);
+	Vec3 cameraPosition(0.0, 0.0, 5.0);
+	Vec3 focusPosition(0, 0, 0);
 	Vec3 focusDirection = focusPosition - cameraPosition;
 	Viewport viewport(512, 256);
 	Camera camera(cameraPosition, focusDirection, Vec3(0.0, 1.0, 0.0), 20, viewport);
@@ -169,7 +169,7 @@ void testScene(const Raymarcher &raymarcher)
 	Sphere sphere1(focusPosition + Vec3(-1.0, 0.0, 0.0), 0.5, material1);
 	Sphere sphere2(focusPosition + Vec3(-0.8, 0.0, -2.0), 0.5, material2);
 	Sphere sphere3(focusPosition + Vec3(-0.6, 0.0, -4.0), 0.5, material3);
-	Transform t(axisAngleToQuat(Vec3(0.0, 0.2, 1.0), pi() * 0.25), Vec3(1.0, 0.0, -3.0), 1.0);
+	Transform t(axisAngleToQuat(Vec3(1.0, 1.0, 0.0), pi() * 0.25), focusPosition + Vec3(1.0, 0.0, 0.0), 0.6);
 	Box box(t, Vec3(0.5, 0.5, 0.5), material3);
 
 	Scene scene;
