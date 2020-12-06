@@ -2,7 +2,7 @@
 
 #include "Common.hpp"
 
-#include <ostream>
+#include <iostream>
 #include <stdlib.h>
 
 template <typename ... Args>
@@ -11,6 +11,14 @@ void toCerr(Args&&... args)
 	(void)(int[]){0, (void(std::cerr << std::forward<Args>(args)), 0)...};
 	std::cerr << std::endl;
 }	
+
+#ifdef NDEBUG
+
+#define raymAssert(...)
+#define raymAssertEqual(...)
+#define raymAssertEqualWithTolerance(...)
+
+#else	// NDEBUG
 
 #define raymAssert(cond, ...) \
 	if (!(cond)) \
@@ -32,3 +40,5 @@ void toCerr(Args&&... args)
 		toCerr("Assertion failed: ", #left, " does not equal ", #right, " (", left, " != ", right, "), function ", __func__, ", file ", __FILE__, ", line ", __LINE__, "."); \
 		abort(); \
 	}
+
+#endif	// NDEBUG
