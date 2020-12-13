@@ -1,15 +1,15 @@
-#include "Common.hpp"
+#include "../Common.hpp"
 
-#include "Box.hpp"
-#include "Camera.hpp"
-#include "File.hpp"
-#include "Framebuffer.hpp"
-#include "Lambertian.hpp"
-#include "Quat.hpp"
-#include "Raymarcher.hpp"
-#include "Scene.hpp"
-#include "Sphere.hpp"
-#include "Vec3.hpp"
+#include "../Box.hpp"
+#include "../Camera.hpp"
+#include "../File.hpp"
+#include "../Framebuffer.hpp"
+#include "../Lambertian.hpp"
+#include "../Quat.hpp"
+#include "../Raymarcher.hpp"
+#include "../Scene.hpp"
+#include "../Sphere.hpp"
+#include "../Vec3.hpp"
 
 int main(int argc, char const *argv[])
 {
@@ -52,7 +52,7 @@ int main(int argc, char const *argv[])
 	raymarcher.setSamplesPerPixel(1);
 	raymarcher.render(scene, camera, framebuffer);
 
-	file::writePpm("img", framebuffer, 255);
+	file::writePpm(argv[argc > 1 ? 1 : 0], framebuffer, 255);
 
 	return 0;
 }
