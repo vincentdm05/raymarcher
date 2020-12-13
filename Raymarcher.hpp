@@ -18,7 +18,6 @@
 class Raymarcher
 {
 private:
-	bool outputEnabled = true;
 	bool visualiseIterations = false;
 	bool visualiseDepth = false;
 	uint maxRayIterations = 300;
@@ -32,9 +31,8 @@ public:
 	Raymarcher() {}
 
 	Vec3 getColour(const Ray &r, const Scene &scene) const;
-	Vec3 samplePixel(const Camera &camera, const Scene &scene, int col, int row, const Viewport &vp, uint nSamples = 1) const;
-	void printImage(const Scene &scene, const Camera &camera) const;
-	void setOutputEnabled(bool value) { outputEnabled = value; }
+	Vec3 renderPixel(const Camera &camera, const Scene &scene, int col, int row, const Viewport &vp, uint nSamples = 1) const;
+	void render(const Scene &scene, const Camera &camera, Framebuffer &framebuffer) const;
 	void setVisualiseIterations(bool value) { visualiseIterations = value; }
 	void setVisualiseDepth(bool value) { visualiseDepth = value; }
 	void setMaxRayIterations(uint n) { maxRayIterations = n; }
@@ -86,7 +84,7 @@ Vec3 Raymarcher::getColour(const Ray &r, const Scene &scene) const
 	return scene.background().sample(r.direction());
 }
 
-Vec3 Raymarcher::samplePixel(const Camera &camera, const Scene &scene, int col, int row, const Viewport &vp, uint nSamples) const
+Vec3 Raymarcher::renderPixel(const Camera &camera, const Scene &scene, int col, int row, const Viewport &vp, uint nSamples) const
 {
 	Vec3 colour;
 	for (uint i = 0; i < nSamples; i++)
@@ -106,24 +104,25 @@ Vec3 Raymarcher::samplePixel(const Camera &camera, const Scene &scene, int col, 
 	return colour / nSamples;
 }
 
-void Raymarcher::printImage(const Scene &scene, const Camera &camera) const
+void Raymarcher::render(const Scene &scene, const Camera &camera, Framebuffer &framebuffer) const
 {
 	const Viewport &viewport = camera.getViewport();
 
 	int nx = viewport.width();
 	int ny = viewport.height();
-	if (outputEnabled)
-		std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
+	Real colourArray[3];
 	for (int row = ny - 1; row >= 0; row--)
 	{
 		for (int col = 0; col < nx; col++)
 		{
-			Vec3 colour = samplePixel(camera, scene, col, row, viewport, samplesPerPixel);
+			Vec3 colour = renderPixel(camera, scene, col, row, viewport, samplesPerPixel);
 			colour = 255.99 * gammaCorrect(colour);
 
-			if (outputEnabled)
-				std::cout << int(colour.r) << " " << int(colour.g) << " " << int(colour.b) << "\n";
+			colourArray[0] = colour.r;
+			colourArray[1] = colour.g;
+			colourArray[2] = colour.b;
+			framebuffer.store(col, row, (byte*)colourArray);
 		}
 	}
 }

@@ -2,6 +2,8 @@
 
 #include "Box.hpp"
 #include "Camera.hpp"
+#include "File.hpp"
+#include "Framebuffer.hpp"
 #include "Lambertian.hpp"
 #include "Quat.hpp"
 #include "Raymarcher.hpp"
@@ -15,6 +17,11 @@ int main(int argc, char const *argv[])
 	Vec3 focusPosition(0, 0, 0);
 	Vec3 focusDirection = focusPosition - cameraPosition;
 	Viewport viewport(512, 256);
+	FramebufferDesc fbDesc;
+	fbDesc.width = viewport.width();
+	fbDesc.height = viewport.height();
+	fbDesc.format = FramebufferFormat::FBFormat_r32g32b32f;
+	Framebuffer framebuffer(fbDesc);
 	Camera camera(cameraPosition, focusDirection, Vec3(0.0, 1.0, 0.0), 20, viewport);
 
 	Lambertian material0(Vec3(0.6, 0.6, 0.6));
@@ -43,7 +50,9 @@ int main(int argc, char const *argv[])
 	raymarcher.setMaxRayIterations(200);
 	raymarcher.setHitEpsilon(0.001);
 	raymarcher.setSamplesPerPixel(1);
-	raymarcher.printImage(scene, camera);
+	raymarcher.render(scene, camera, framebuffer);
+
+	file::writePpm("img", framebuffer, 255);
 
 	return 0;
 }
