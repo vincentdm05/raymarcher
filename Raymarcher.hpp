@@ -12,8 +12,8 @@
 #include "Vec3.hpp"
 #include "Viewport.hpp"
 
-#include <iostream>
-#include <random>
+#include <atomic>
+#include <future>
 
 class Raymarcher
 {
@@ -31,7 +31,7 @@ public:
 	Raymarcher() {}
 
 	Vec3 getColour(const Ray &r, const Scene &scene) const;
-	Vec3 renderPixel(const Camera &camera, const Scene &scene, int col, int row, const Viewport &vp, uint nSamples = 1) const;
+	void renderPixels(const Camera &camera, const Scene &scene, const Viewport &vp, std::atomic<uint> &counter, Framebuffer &framebuffer) const;
 	void render(const Scene &scene, const Camera &camera, Framebuffer &framebuffer) const;
 	void setVisualiseIterations(bool value) { visualiseIterations = value; }
 	void setVisualiseDepth(bool value) { visualiseDepth = value; }
@@ -84,45 +84,65 @@ Vec3 Raymarcher::getColour(const Ray &r, const Scene &scene) const
 	return scene.background().sample(r.direction());
 }
 
-Vec3 Raymarcher::renderPixel(const Camera &camera, const Scene &scene, int col, int row, const Viewport &vp, uint nSamples) const
+void Raymarcher::renderPixels(const Camera &camera, const Scene &scene, const Viewport &vp, std::atomic<uint> &counter, Framebuffer &framebuffer) const
 {
-	Vec3 colour;
-	for (uint i = 0; i < nSamples; i++)
+	uint pixelAmount = vp.width() * vp.height();
+	while (true)
 	{
-		Real uOffset = 0.5;
-		Real vOffset = 0.5;
-		if (nSamples > 1)
+		uint pixelIndex = counter++;
+		if (pixelIndex >= pixelAmount)
+			break;
+
+		uint row = pixelIndex / vp.width();
+		uint col = pixelIndex % vp.width();
+		Real u = Real(col);
+		Real v = Real(row);
+		if (samplesPerPixel > 1)
 		{
-			uOffset = uniformRand();
-			vOffset = uniformRand();
+			u += uniformRand();
+			v += uniformRand();
 		}
-		Real u = Real(col + uOffset) / vp.width();
-		Real v = Real(row + vOffset) / vp.height();
+		else
+		{
+			u += 0.5;
+			v += 0.5;
+		}
+		u /= vp.width();
+		v /= vp.height();
 		Ray r = camera.getRay(u, v);
-		colour += getColour(r, scene);
+		Vec3 colour = getColour(r, scene);
+
+		for (uint i = 1; i < samplesPerPixel; i++)
+		{
+			u = Real(col + uniformRand()) / vp.width();
+			v = Real(row + uniformRand()) / vp.height();
+			r = camera.getRay(u, v);
+			colour += getColour(r, scene);
+		}
+
+		colour /= samplesPerPixel;
+		colour = 255.99 * gammaCorrect(colour);
+
+		Real colourArray[3];
+		colourArray[0] = colour.r;
+		colourArray[1] = colour.g;
+		colourArray[2] = colour.b;
+		framebuffer.store(int(col), int(row), (byte*)colourArray);
 	}
-	return colour / nSamples;
 }
 
 void Raymarcher::render(const Scene &scene, const Camera &camera, Framebuffer &framebuffer) const
 {
+	std::atomic<uint> renderPixelCounter {0};
 	const Viewport &viewport = camera.getViewport();
 
-	int nx = viewport.width();
-	int ny = viewport.height();
+	const uint nThreads = max(std::thread::hardware_concurrency(), 1) - 1;
+	std::future<void> futures[nThreads];
+	for (uint i = 0; i < nThreads; i++)
+		futures[i] = std::async(std::launch::async, &Raymarcher::renderPixels, this, std::ref(camera), std::ref(scene), std::ref(viewport), std::ref(renderPixelCounter), std::ref(framebuffer));
 
-	Real colourArray[3];
-	for (int row = ny - 1; row >= 0; row--)
-	{
-		for (int col = 0; col < nx; col++)
-		{
-			Vec3 colour = renderPixel(camera, scene, col, row, viewport, samplesPerPixel);
-			colour = 255.99 * gammaCorrect(colour);
+	renderPixels(camera, scene, viewport, renderPixelCounter, framebuffer);
 
-			colourArray[0] = colour.r;
-			colourArray[1] = colour.g;
-			colourArray[2] = colour.b;
-			framebuffer.store(col, row, (byte*)colourArray);
-		}
-	}
+	for (uint i = 0; i < nThreads; i++)
+		futures[i].get();
 }
