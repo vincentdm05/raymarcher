@@ -75,7 +75,7 @@ Vec3 Raymarcher::getColour(const Ray &r, const Scene &scene) const
 	{
 		if (rec.hitable)
 		{
-			return rec.hitable->getMaterial()->shade(rec, scene);
+			return rec.hitable->getMaterial()->shade(r.direction(), rec, scene, 0);
 		}
 		else
 		{

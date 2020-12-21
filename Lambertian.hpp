@@ -17,10 +17,10 @@ public:
 	Lambertian() { albedo = Vec3(0.5, 0.5, 0.5); }
 	Lambertian(const Vec3 &_albedo) { albedo = _albedo; }
 
-	virtual Vec3 shade(const HitRecord &hr, const Scene &scene) const;
+	virtual Vec3 shade(const Vec3 &incoming, const HitRecord &hr, const Scene &scene, uint bounces) const;
 };
 
-Vec3 Lambertian::shade(const HitRecord &hr, const Scene &scene) const
+Vec3 Lambertian::shade(const Vec3 &incoming, const HitRecord &hr, const Scene &scene, uint bounces) const
 {
 	Real epsilon = 0.0001;
 	Vec3 normal = hr.hitable->evaluateNormal(hr.point, epsilon);

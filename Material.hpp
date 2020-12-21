@@ -13,7 +13,7 @@ class Material
 public:
 	virtual ~Material() {}
 
-	virtual Vec3 shade(const HitRecord &hr, const Scene &scene) const = 0;
+	virtual Vec3 shade(const Vec3 &incoming, const HitRecord &hr, const Scene &scene, uint bounces) const = 0;
 };
 
 Real schlick(Real cosine, Real refractionIndex)
