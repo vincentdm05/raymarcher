@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
 	Sphere sphere2(focusPosition + Vec3(-0.8, 0.0, -2.0), 0.5, material2);
 	Sphere sphere3(focusPosition + Vec3(-0.6, 0.0, -4.0), 0.5, material3);
 	Transform t(axisAngleToQuat(Vec3(1.0, 1.0, 0.0), pi() * 0.25), focusPosition + Vec3(1.0, 0.0, 0.0), 0.6);
-	Box box(t, Vec3(0.5, 0.5, 0.5), material3);
+	Box box(t, Vec3(1.0, 1.0, 1.0), material3);
 
 	Scene scene;
 	scene.setBackground(Background(Vec3(0.8, 0.3, 0.1), Vec3(0.2, 0.7, 0.9)));
