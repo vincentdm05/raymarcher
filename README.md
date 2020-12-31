@@ -21,3 +21,11 @@ Examples are built and ran using the `raymarch.sh` script found in the `tools` f
 Note that on Windows you'll have to have `nomacs` installed and an alias set for the example script to be able to show the result. Otherwise you can simply open the resulting file manually.
 
 All example programs can produce a PPM image, written to a file for which the name can be given as parameter. If no parameter is given, the name of the executable is used to generate the output file.
+
+Below are some examples achieved with the scene described in `examples/simple_scene.cpp`. In order of appearance: a normal shaded render with shadows, depth visualisation of the same scene, and finally a visualisation of the number of iterations needed to reach a hit.
+
+![Simple scene with shadows](images/simple_scene_with_shadows.png)
+
+![Simple scene depth](images/simple_scene_vis_depth.png)
+
+![Simple scene iterations](images/simple_scene_vis_iterations.png)
